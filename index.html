@@ -1,9 +1,580 @@
-<!DOCTYPE html>
-<html lang="en">
 
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <title>实验3</title>
+    <title>Yuan Line</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-image: url('https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAKDAAFonqPZDru7WfKhzF_lJlMT1DXZUAAC5BcAApTA-VSqd7SsxcNekTYE.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center center;
+
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: rgba(56, 150, 1, 0.4);;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            position: relative;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        .language-switcher {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        .language-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+        .language-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .language-btn.active {
+            background-color: white;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        nav {
+            background-color:rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        main {
+            display: flex;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        section {
+            flex: 3;
+            background-color:rgba(255, 255, 255, 0.65);
+            padding: 20px;
+            border-radius: 5px;
+            margin-right: 20px;
+            min-width: 300px;
+        }
+        aside {
+            flex: 1;
+            background-color:rgba(230, 230, 210, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            min-width: 250px;
+        }
+        footer {
+            background-color:rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        article {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        article:last-child {
+            border-bottom: none;
+        }
+        h1, h2, h3 {
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        .image-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .image-container img:hover {
+            transform: scale(1.02);
+        }
+        .image-caption {
+            font-style: italic;
+            color: #666;
+            margin-top: 5px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .gallery img:hover {
+            transform: scale(1.03);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #bbb;
+        }
+        .caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            section {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            nav ul li {
+                margin: 5px 0;
+            }
+            .language-switcher {
+                position: static;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="language-switcher">
+            <button class="language-btn active" data-lang="zh-CN">简体中文</button>
+            <button class="language-btn" data-lang="zh-TW">繁體中文</button>
+            <button class="language-btn" data-lang="en">English</button>
+            <button class="language-btn" data-lang="ja">日本語</button>
+        </div>
+        <h1 data-i18n="welcome_title">Yuan Line</h1>
+        <p data-i18n="welcome_subtitle">text</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#home" data-i18n="nav_home">text</a></li>
+            <li><a href="#about" data-i18n="nav_about">text</a></li>
+            <li><a href="#gallery" data-i18n="nav_gallery">text</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section id="home">
+            <article>
+                <h2 data-i18n="welcome_home" style="text-align: center; margin: 0 auto; width: 100%;">欢迎访问</h2>
+                <p style="text-align: center; margin: 0 auto; width: 100%;">Designed by YuanCQA</p>
+                <h2 data-i18n="welcome_heading">欢迎访问</h2>
+                <p data-i18n="welcome_text0">这是一个支持多语言的静态网页模板，可以在GitHub Pages上运行。</p>
+                <p data-i18n="welcome_text1">这是一个支持多语言的静态网页模板，可以在GitHub Pages上运行。</p>
+                
+                <div class="image-container">
+                    <img class="zoomable" 
+                         src="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAKDF2iervwM9BGDR7QE13UTXlfiT0OAAAIWGAAClMD5VFxNH13MFX5ENgQ.png" 
+                         data-zh-CN="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAKDF2iervwM9BGDR7QE13UTXlfiT0OAAAIWGAAClMD5VFxNH13MFX5ENgQ.png"
+                         data-zh-TW="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAKDF2iervwM9BGDR7QE13UTXlfiT0OAAAIWGAAClMD5VFxNH13MFX5ENgQ.png"
+                         data-en="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAKDF2iervwM9BGDR7QE13UTXlfiT0OAAAIWGAAClMD5VFxNH13MFX5ENgQ.png"
+                         data-ja="https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAKDF2iervwM9BGDR7QE13UTXlfiT0OAAAIWGAAClMD5VFxNH13MFX5ENgQ.png"
+                         alt="示例图片" 
+                         data-i18n="[alt]sample_image_alt">
+                    <p data-i18n="sample_image_caption">这是一张示例图片</p>
+                </div>
+                
+                <p data-i18n="welcome_text2">你可以替换这些图片为你自己的内容。图片可以来自网络URL，也可以放在你的仓库中。</p>
+                <p data-i18n="welcome_text3">你可以替换这些图片为你自己的内容。图片可以来自网络URL，也可以放在你的仓库中。</p>
+            </article>
+            
+            <article id="about">
+                <h2 data-i18n="about_heading">关于这个模板</h2>
+                <p data-i18n="about_text1">这个模板包含以下特性：</p>
+                <ul>
+                    <li data-i18n="feature1">响应式设计，适配各种屏幕尺寸</li>
+                    <li data-i18n="feature2">图片展示区域</li>
+                    <li data-i18n="feature3">简单的图片画廊</li>
+                    <li data-i18n="feature4">多语言支持（简体中文、繁体中文、英语、日语）</li>
+                    <li data-i18n="feature5">图片点击放大功能</li>
+                    <li data-i18n="feature6">图片随语言切换功能</li>
+                    <li data-i18n="feature7">完全静态，适合GitHub Pages</li>
+                </ul>
+            </article>
+            
+            <article id="gallery">
+                <h2 data-i18n="gallery_heading">图片画廊</h2>
+                <p data-i18n="gallery_text">这是一个简单的图片画廊展示：</p>
+                
+                <div class="gallery">
+                    <img class="zoomable" 
+                         src="https://via.placeholder.com/300x200/2196F3/FFFFFF?text=图片1" 
+                         data-zh-CN="https://via.placeholder.com/300x200/2196F3/FFFFFF?text=图片1"
+                         data-zh-TW="https://via.placeholder.com/300x200/2196F3/FFFFFF?text=圖片1"
+                         data-en="https://via.placeholder.com/300x200/2196F3/FFFFFF?text=Image+1"
+                         data-ja="https://via.placeholder.com/300x200/2196F3/FFFFFF?text=画像1"
+                         alt="图片1" 
+                         data-i18n="[alt]gallery_image1_alt">
+                    <img class="zoomable" 
+                         src="https://via.placeholder.com/300x200/FF5722/FFFFFF?text=图片2" 
+                         data-zh-CN="https://via.placeholder.com/300x200/FF5722/FFFFFF?text=图片2"
+                         data-zh-TW="https://via.placeholder.com/300x200/FF5722/FFFFFF?text=圖片2"
+                         data-en="https://via.placeholder.com/300x200/FF5722/FFFFFF?text=Image+2"
+                         data-ja="https://via.placeholder.com/300x200/FF5722/FFFFFF?text=画像2"
+                         alt="图片2" 
+                         data-i18n="[alt]gallery_image2_alt">
+                    <img class="zoomable" 
+                         src="https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=图片3" 
+                         data-zh-CN="https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=图片3"
+                         data-zh-TW="https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=圖片3"
+                         data-en="https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=Image+3"
+                         data-ja="https://via.placeholder.com/300x200/9C27B0/FFFFFF?text=画像3"
+                         alt="图片3" 
+                         data-i18n="[alt]gallery_image3_alt">
+                    <img class="zoomable" 
+                         src="https://via.placeholder.com/300x200/00BCD4/FFFFFF?text=图片4" 
+                         data-zh-CN="https://via.placeholder.com/300x200/00BCD4/FFFFFF?text=图片4"
+                         data-zh-TW="https://via.placeholder.com/300x200/00BCD4/FFFFFF?text=圖片4"
+                         data-en="https://via.placeholder.com/300x200/00BCD4/FFFFFF?text=Image+4"
+                         data-ja="https://via.placeholder.com/300x200/00BCD4/FFFFFF?text=画像4"
+                         alt="图片4" 
+                         data-i18n="[alt]gallery_image4_alt">
+                </div>
+                
+                <p data-i18n="gallery_footer">你可以轻松地添加更多图片到这个画廊中。</p>
+            </article>
+        </section>
+        
+        <aside>
+            <h3 data-i18n="sidebar_title">侧边栏</h3>
+            <p data-i18n="sidebar_text">这里可以放置一些附加信息或链接。</p>
+            
+            <div class="image-container">
+                <img class="zoomable" 
+                     src="https://via.placeholder.com/300x200/607D8B/FFFFFF?text=侧边栏图片" 
+                     data-zh-CN="https://via.placeholder.com/300x200/607D8B/FFFFFF?text=侧边栏图片"
+                     data-zh-TW="https://via.placeholder.com/300x200/607D8B/FFFFFF?text=側邊欄圖片"
+                     data-en="https://via.placeholder.com/300x200/607D8B/FFFFFF?text=Sidebar+Image"
+                     data-ja="https://via.placeholder.com/300x200/607D8B/FFFFFF?text=サイドバー画像"
+                     alt="侧边栏图片" 
+                     data-i18n="[alt]sidebar_image_alt">
+            </div>
+            
+            <h3 data-i18n="quick_links">快速链接</h3>
+            <ul>
+                <li><a href="https://pages.github.com" target="_blank" data-i18n="github_pages">GitHub Pages文档</a></li>
+                <li><a href="https://github.com" target="_blank" data-i18n="github_home">GitHub官网</a></li>
+                <li><a href="#home" data-i18n="back_to_top">返回顶部</a></li>
+            </ul>
+        </aside>
+    </main>
+    
+    <footer>
+        <p>&copy; <span id="year"></span> <span data-i18n="footer_text">多语言静态网页模板. 保留所有权利.</span></p>
+    </footer>
+
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption" class="caption"></div>
+    </div>
+
+    <script>
+        const i18n = {
+            'zh-CN': {
+                'welcome_title': '🌲  Yuan Line - 光凌世界  🌲',
+                'welcome_subtitle': '在「遗眷岛」上，Yuan和Nora、以及Nav和Izy将探索和解读「光凌」的奥秘，并在旅途中不断地重识自我。',
+                'welcome_home': '———— 欢迎来到光凌世界 ————',
+                'nav_home': '· 游戏介绍 ·',
+                'nav_about': '· 下载游戏 ·',
+                'nav_gallery': '· 游戏截图 ·',
+                'welcome_heading': '· 游戏介绍 ·',
+                'welcome_text0': '『Yuan Line』是一个基于『跳舞的线 (Dancing Line) 』为蓝本创作的同人系列作品游戏。',
+                'welcome_text1': '本同人作品完全免费，不含有任何商业行为，任何人严禁使用该作品开展任何形式的商业活动！！',
+                'sample_image_alt': 'Image_01',
+                'sample_image_caption': ' ',
+                'welcome_text2': '『Yuan Line』在保留传统按音乐节奏点击舞线这一游戏规则的基础上，融合了剧情演绎、开放世界、许愿等一系列新的游戏内容，玩家们将会在推进关卡进度与剧情发展的过程中获得更加沉浸的游戏体验！',
+                'welcome_text3': '『Yuan Line』目前包含两大章节主线剧情（目前版本尚未完结）与一章支线剧情，玩家们可以推动关卡进度和剧情发展不断揭晓「光凌」的秘密；在开放的「光凌世界」中，玩家也将在不同时段的不同地点发现不同探索者间的不同对话。',
+                'about_heading': '· 下载游戏 ·',
+                'about_text1': '⭐『当前最新版本：v3.0.3 (Windows版本为3.0.0) 』⭐',
+                'feature1': '响应式设计，适配各种屏幕尺寸',
+                'feature2': '图片展示区域',
+                'feature3': '简单的图片画廊',
+                'feature4': '多语言支持（简体中文、繁体中文、英语、日语）',
+                'feature5': '图片点击放大功能',
+                'feature6': '图片随语言切换功能',
+                'feature7': '完全静态，适合GitHub Pages',
+                'gallery_heading': '图片画廊',
+                'gallery_text': '这是一个简单的图片画廊展示：',
+                'gallery_image1_alt': '图片1',
+                'gallery_image2_alt': '图片2',
+                'gallery_image3_alt': '图片3',
+                'gallery_image4_alt': '图片4',
+                'gallery_footer': '你可以轻松地添加更多图片到这个画廊中。',
+                'sidebar_title': '侧边栏',
+                'sidebar_text': '这里可以放置一些附加信息或链接。',
+                'sidebar_image_alt': '侧边栏图片',
+                'quick_links': '快速链接',
+                'github_pages': 'GitHub Pages文档',
+                'github_home': 'GitHub官网',
+                'back_to_top': '返回顶部',
+                'footer_text': '多语言静态网页模板. 保留所有权利.'
+            },
+            'zh-TW': {
+                'welcome_title': '歡迎來到我的多語言網站',
+                'welcome_subtitle': '這是一個支援多語言的靜態網頁模板',
+                'nav_home': '首頁',
+                'nav_about': '關於',
+                'nav_gallery': '圖片展示',
+                'welcome_heading': '歡迎訪問',
+                'welcome_text1': '這是一個支援多語言的靜態網頁模板，可以在GitHub Pages上運行。',
+                'sample_image_alt': '示例圖片',
+                'sample_image_caption': '這是一張示例圖片',
+                'welcome_text2': '你可以替換這些圖片為你自己的內容。圖片可以來自網路URL，也可以放在你的倉庫中。',
+                'about_heading': '關於這個模板',
+                'about_text1': '這個模板包含以下特性：',
+                'feature1': '響應式設計，適配各種螢幕尺寸',
+                'feature2': '圖片展示區域',
+                'feature3': '簡單的圖片畫廊',
+                'feature4': '多語言支援（簡體中文、繁體中文、英語、日語）',
+                'feature5': '圖片點擊放大功能',
+                'feature6': '圖片隨語言切換功能',
+                'feature7': '完全靜態，適合GitHub Pages',
+                'gallery_heading': '圖片畫廊',
+                'gallery_text': '這是一個簡單的圖片畫廊展示：',
+                'gallery_image1_alt': '圖片1',
+                'gallery_image2_alt': '圖片2',
+                'gallery_image3_alt': '圖片3',
+                'gallery_image4_alt': '圖片4',
+                'gallery_footer': '你可以輕鬆地添加更多圖片到這個畫廊中。',
+                'sidebar_title': '側邊欄',
+                'sidebar_text': '這裡可以放置一些附加資訊或連結。',
+                'sidebar_image_alt': '側邊欄圖片',
+                'quick_links': '快速連結',
+                'github_pages': 'GitHub Pages文件',
+                'github_home': 'GitHub官網',
+                'back_to_top': '返回頂部',
+                'footer_text': '多語言靜態網頁模板. 保留所有權利.'
+            },
+            'en': {
+                'welcome_title': 'Welcome to My Multilingual Website',
+                'welcome_subtitle': 'A static webpage template with multilingual support',
+                'nav_home': 'Home',
+                'nav_about': 'About',
+                'nav_gallery': 'Gallery',
+                'welcome_heading': 'Welcome',
+                'welcome_text1': 'This is a multilingual static webpage template that works on GitHub Pages.',
+                'sample_image_alt': 'Sample image',
+                'sample_image_caption': 'This is a sample image',
+                'welcome_text2': 'You can replace these images with your own content. Images can be from web URLs or placed in your repository.',
+                'about_heading': 'About This Template',
+                'about_text1': 'This template includes the following features:',
+                'feature1': 'Responsive design for all screen sizes',
+                'feature2': 'Image display areas',
+                'feature3': 'Simple image gallery',
+                'feature4': 'Multilingual support (Simplified Chinese, Traditional Chinese, English, Japanese)',
+                'feature5': 'Image zoom on click',
+                'feature6': 'Images change with language',
+                'feature7': 'Completely static, perfect for GitHub Pages',
+                'gallery_heading': 'Image Gallery',
+                'gallery_text': 'Here is a simple image gallery:',
+                'gallery_image1_alt': 'Image 1',
+                'gallery_image2_alt': 'Image 2',
+                'gallery_image3_alt': 'Image 3',
+                'gallery_image4_alt': 'Image 4',
+                'gallery_footer': 'You can easily add more images to this gallery.',
+                'sidebar_title': 'Sidebar',
+                'sidebar_text': 'You can place additional information or links here.',
+                'sidebar_image_alt': 'Sidebar image',
+                'quick_links': 'Quick Links',
+                'github_pages': 'GitHub Pages Docs',
+                'github_home': 'GitHub Home',
+                'back_to_top': 'Back to Top',
+                'footer_text': 'Multilingual Static Web Template. All Rights Reserved.'
+            },
+            'ja': {
+                'welcome_title': '多言語対応ウェブサイトへようこそ',
+                'welcome_subtitle': '多言語対応の静的ウェブページテンプレートです',
+                'nav_home': 'ホーム',
+                'nav_about': 'について',
+                'nav_gallery': 'ギャラリー',
+                'welcome_heading': 'ようこそ',
+                'welcome_text1': 'これはGitHub Pagesで動作する多言語対応の静的ウェブページテンプレートです。',
+                'sample_image_alt': 'サンプル画像',
+                'sample_image_caption': 'これはサンプル画像です',
+                'welcome_text2': 'これらの画像を自分のコンテンツに置き換えることができます。画像はWeb URLからでも、リポジトリに配置しても構いません。',
+                'about_heading': 'このテンプレートについて',
+                'about_text1': 'このテンプレートには以下の機能があります:',
+                'feature1': 'すべての画面サイズに対応したレスポンシブデザイン',
+                'feature2': '画像表示エリア',
+                'feature3': 'シンプルな画像ギャラリー',
+                'feature4': '多言語対応（簡体字中国語、繁体字中国語、英語、日本語）',
+                'feature5': '画像をクリックで拡大表示',
+                'feature6': '言語に応じて画像が切り替わります',
+                'feature7': '完全に静的で、GitHub Pagesに最適',
+                'gallery_heading': '画像ギャラリー',
+                'gallery_text': 'シンプルな画像ギャラリーです:',
+                'gallery_image1_alt': '画像1',
+                'gallery_image2_alt': '画像2',
+                'gallery_image3_alt': '画像3',
+                'gallery_image4_alt': '画像4',
+                'gallery_footer': 'このギャラリーに簡単に画像を追加できます。',
+                'sidebar_title': 'サイドバー',
+                'sidebar_text': 'ここに追加情報やリンクを配置できます。',
+                'sidebar_image_alt': 'サイドバー画像',
+                'quick_links': 'クイックリンク',
+                'github_pages': 'GitHub Pagesドキュメント',
+                'github_home': 'GitHubホーム',
+                'back_to_top': 'トップに戻る',
+                'footer_text': '多言語対応静的ウェブテンプレート. 無断複写・転載を禁じます。'
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.dataset.i18n;
+
+                if (key.startsWith('[alt]')) {
+                    const altKey = key.replace('[alt]', '');
+                    element.alt = i18n[lang][altKey] || element.alt;
+                    return;
+                }
+                
+                element.textContent = i18n[lang][key] || element.textContent;
+            });
+            
+            document.querySelectorAll('img[data-zh-CN]').forEach(img => {
+                img.src = img.getAttribute(`data-${lang}`) || img.src;
+            });
+            
+            document.documentElement.lang = lang;
+            
+            localStorage.setItem('preferredLanguage', lang);
+        }
+
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const captionText = document.getElementById('caption');
+        
+        document.querySelectorAll('.zoomable').forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+            }
+        });
+        
+        document.getElementsByClassName('close')[0].onclick = function() { 
+            modal.style.display = "none";
+        }
+        
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        const preferredLanguage = localStorage.getItem('preferredLanguage') || 'zh-CN';
+        changeLanguage(preferredLanguage);
+
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                changeLanguage(btn.dataset.lang);
+            });
+        });
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
