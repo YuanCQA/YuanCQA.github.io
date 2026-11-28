@@ -73,7 +73,6 @@
 
         a { color: var(--green-600); text-decoration: none; }
 
-        /* ============ 顶部主视觉 ============ */
         .hero {
             position: relative;
             overflow: hidden;
@@ -179,7 +178,6 @@
         .btn-ghost { border: 1px solid rgba(255, 255, 255, 0.5); color: #fff; }
         .btn-ghost:hover { background: rgba(255, 255, 255, 0.16); transform: translateY(-2px); }
 
-        /* ============ 导航 ============ */
         .navbar {
             position: sticky;
             top: 10px;
@@ -213,7 +211,6 @@
 
         .navbar a:hover { background: rgba(63, 157, 90, 0.14); color: var(--green-700); }
 
-        /* ============ 主体网格 ============ */
         section[id] { scroll-margin-top: 96px; }
 
         main {
@@ -286,7 +283,6 @@
 
         .caption { font-size: 0.8rem; color: var(--ink-faint); text-align: center; padding: 8px 0 0; min-height: 1em; }
 
-        /* ============ 下载区 ============ */
         .divider {
             height: 1px;
             margin: 20px 0;
@@ -350,7 +346,6 @@
         .dl-card a:hover::after { transform: translateX(3px); }
         .dl-card a:hover { color: var(--green-700); }
 
-        /* ============ 画廊 ============ */
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -371,7 +366,6 @@
 
         .gallery img:hover { transform: translateY(-3px) scale(1.012); box-shadow: 0 18px 38px rgba(10, 34, 20, 0.2); }
 
-        /* ============ 侧栏 ============ */
         aside {
             position: sticky;
             top: 86px;
@@ -412,7 +406,6 @@
             background: var(--green-500);
         }
 
-        /* ============ 页脚 ============ */
         footer {
             margin-top: clamp(18px, 2.6vw, 34px);
             padding: 22px 10px 8px;
@@ -422,7 +415,6 @@
             border-top: 1px solid rgba(28, 82, 51, 0.14);
         }
 
-        /* ============ 弹窗 ============ */
         .modal {
             display: none;
             position: fixed;
@@ -476,7 +468,6 @@
 
         :focus-visible { outline: 2px solid var(--green-500); outline-offset: 3px; border-radius: 6px; }
 
-        /* ============ 响应式 ============ */
         @media (max-width: 1080px) {
             main { grid-template-columns: minmax(0, 1fr); }
             aside { position: static; order: 2; }
@@ -600,7 +591,6 @@
         html[data-theme="dark"] .modal { background: rgba(4, 9, 6, 0.95); }
         html[data-theme="dark"] .hero { box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6); }
 
-        /* ===== 主题过渡动画 ===== */
         body, .card, .navbar, .dl-card, .version, .hero, footer,
         h2, h3, p, a, li, .eyebrow, .byline, .dl-label, .divider,
         .language-btn, .btn, .theme-toggle {
@@ -608,7 +598,6 @@
                         border-color 0.45s ease, box-shadow 0.45s ease;
         }
 
-        /* ===== 白天/黑夜切换按钮 ===== */
         .theme-toggle {
             position: relative;
             grid-column: 2;
@@ -671,7 +660,6 @@
             }
         }
 
-        /* ===== 点击涟漪 ===== */
         .click-fx {
             position: fixed;
             left: 0;
@@ -703,7 +691,6 @@
             100% { opacity: 0; transform: scale(2.4); }
         }
 
-        /* ===== 弹窗左右切换 ===== */
         .nav-btn {
             display: none;
             position: absolute;
